@@ -22,10 +22,11 @@ namespace USBMissileLauncher
             public const byte Down = 0x01;
             public const byte Left = 0x04;
             public const byte Right = 0x08;
+            public const byte ShotComplete = 0x10;
         }
 
         private readonly SpecifiedDevice _missileLauncherDevice;
-        private readonly DispatcherTimer _fireTimer = new DispatcherTimer();
+        private readonly DispatcherTimer _updateStateTimer = new DispatcherTimer();
         private byte _state;
         public bool Exist;
         /// <summary>
@@ -35,19 +36,18 @@ namespace USBMissileLauncher
         /// <param name="productId">Product ID</param>
         public MissileController(int vendorId, int productId)
         {
-            _fireTimer.Tick += FireTimerTick;
-            _fireTimer.Interval = new TimeSpan(0, 0, 5); // 5 secs to shot
-            _fireTimer.IsEnabled = true;
-            _fireTimer.Stop();
+            _updateStateTimer.Tick += UpdateStateTimerTick;
+            _updateStateTimer.Interval = new TimeSpan(TimeSpan.TicksPerSecond / 8); 
+            _updateStateTimer.IsEnabled = true;
+            _updateStateTimer.Stop();
             _missileLauncherDevice = SpecifiedDevice.FindSpecifiedDevice(vendorId, productId);
             _missileLauncherDevice.DataRecieved += DataReceived;
             Exist = _missileLauncherDevice != null;
         }
         
-        private void FireTimerTick(object sender, EventArgs e)
+        private void UpdateStateTimerTick(object sender, EventArgs e)
         {
-            Stop();
-            _fireTimer.Stop();
+            RequestStatus();
         }
 
         /// <summary>
@@ -62,6 +62,12 @@ namespace USBMissileLauncher
 
         private void DataReceived(object sender, DataRecievedEventArgs args)
         {
+            if (args.data[1] == TurretState.ShotComplete)
+            {
+                //Тут произошел выстрел
+                Stop();
+                return;
+            }
             _state = args.data[1];
         }
 
@@ -73,30 +79,34 @@ namespace USBMissileLauncher
         public void Left()
         {
             _missileLauncherDevice.SendData(Command.Left);
+            _updateStateTimer.Start();
         }
         public void Right()
         {
             _missileLauncherDevice.SendData(Command.Right);
+            _updateStateTimer.Start();
         }
         public void Up()
         {
             _missileLauncherDevice.SendData(Command.Up);
+            _updateStateTimer.Start();
         }
         public void Down()
         {
             _missileLauncherDevice.SendData(Command.Down);
+            _updateStateTimer.Start();
         }
         public void Fire()
         {
             _missileLauncherDevice.SendData(Command.Fire);
-            _fireTimer.Start();
+            _updateStateTimer.Start();
         }
         /// <summary>
         /// Останавливает любое действие
         /// </summary>
         public void Stop()
         {
-            _missileLauncherDevice.SendData(Command.Left); // Костыль для остановки стрельбы
+            _updateStateTimer.Stop();
             _missileLauncherDevice.SendData(Command.Stop);
         }
     }
