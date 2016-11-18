@@ -1,0 +1,19 @@
+﻿<Window x:Class="USBMissileLauncher.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:USBMissileLauncher"
+        mc:Ignorable="d"
+        Title="Missile Controller" Height="200" Width="233.823" ResizeMode="NoResize" PreviewKeyDown="Window_PreviewKeyDown" PreviewKeyUp="Window_PreviewKeyUp" Icon="icon.ico">
+    <Grid>
+        <Grid Margin="10">
+            <Button x:Name="UpButton" Content="↑" Margin="80,10,0,0" Width="40" FontSize="18.667" HorizontalAlignment="Left" Height="40" VerticalAlignment="Top" PreviewMouseDown="UpButton_PreviewMouseDown"  PreviewMouseUp="All_PreviewMouseUp"/>
+            <Button x:Name="DownButton" Content="↓" Margin="80,90,0,0" Width="40" FontSize="18.667" HorizontalAlignment="Left" Height="40" VerticalAlignment="Top" PreviewMouseDown="DownButton_PreviewMouseDown" PreviewMouseUp="All_PreviewMouseUp"  />
+            <Button x:Name="LeftButton" Content="←" Margin="40,50,0,0" Width="40" FontSize="18.667" HorizontalAlignment="Left" Height="40" VerticalAlignment="Top" PreviewMouseDown="LeftButton_PreviewMouseDown" PreviewMouseUp="All_PreviewMouseUp"/>
+            <Button x:Name="RightButton" Content="→" Margin="120,50,0,0" Width="40" FontSize="18.667" HorizontalAlignment="Left" Height="40" VerticalAlignment="Top" PreviewMouseDown="RightButton_PreviewMouseDown" PreviewMouseUp="All_PreviewMouseUp"/>
+            <Button x:Name="FireButton" Content="Fire" Margin="80,50,0,0" Width="40" FontSize="18.667" HorizontalAlignment="Left" Height="40" VerticalAlignment="Top" Click="FireButton_Click"/>
+        </Grid>
+
+    </Grid>
+</Window>
